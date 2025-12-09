@@ -166,22 +166,12 @@ def dijkstra_shortest_path(graph, start, exits, edge_usage):
 # ------------------------ Logging helpers -------------------------------------
 
 def log(msg, verbose, log_lines):
-    """
-    High-level log:
-    - printed to console if verbose
-    - ALWAYS appended to log_lines (goes into report)
-    """
     if verbose:
         print(msg)
     log_lines.append(msg)
 
 
 def detail_log(msg, verbose):
-    """
-    Detailed event log (per-move, arrivals, etc.):
-    - printed to console if verbose
-    - NOT stored in log_lines (kept out of report)
-    """
     if verbose:
         print(msg)
 
@@ -232,14 +222,6 @@ def EvacuationOptimization(graph, groups, exits,
                            verbose=False,
                            routing_mode='dijkstra',
                            show_steps=False):
-    """
-    Simulate evacuation using either:
-      routing_mode='dijkstra' – greedy, congestion-aware
-      routing_mode='floyd'    – global, DP-based shortest paths (no congestion in route choice)
-
-    If show_steps=True, store a full "snapshot" every half-step in the log.
-    If verbose=True, also print detailed per-move messages to the console.
-    """
     t = 0.0
     saved = 0
     target_time = None
@@ -436,7 +418,8 @@ def EvacuationOptimization(graph, groups, exits,
         "Target_Reached_Time": target_time,
         "Log": log_lines
     }
-                               
+
+
 def print_scenario_report(name, results, total_pop, cpu_time_ms=None):
     print("\n" + "-" * 50)
     print(f"SCENARIO REPORT: {name}")
@@ -457,10 +440,12 @@ def print_scenario_report(name, results, total_pop, cpu_time_ms=None):
     if time_taken > 0:
         rate = saved / time_taken
         print(f"> Avg Evacuation Rate:       {rate:.1f} people/min")
-        
+
     if cpu_time_ms is not None:
         print(f"> CPU Time (algorithm):      {cpu_time_ms:.4f} ms")
+
     print("-" * 50 + "\n")
+
 
 def append_report_to_file(filename, scenario_name, results, total_pop, cpu_time_ms):
     """Append a report (summary + clean step-by-step log + CPU time) to a text file."""
@@ -498,6 +483,8 @@ def append_report_to_file(filename, scenario_name, results, total_pop, cpu_time_
             f.write(entry + "\n")
 
         f.write("\n")
+
+
 # ---------------------------------- main --------------------------------------
 
 if __name__ == "__main__":
@@ -537,29 +524,31 @@ if __name__ == "__main__":
         total_pop,
         cpu_fw
     )
+
+
      # ===================== DIJKSTRA (time-limit) =====================
-    print("\n================= DIJKSTRA (time-limit comparison) =================")
-    start_fw = time.perf_counter()
-    res_fw = EvacuationOptimization(
-        building_graph,
-        starting_groups,
-        exit_points,
-        time_limit=time_limit,
-        target_evacuees=None,
-        stop_on_target=False,
-        verbose=True,         # show detailed events on console
-        routing_mode='dijkstra',
-        show_steps=True       # record STEP snapshots into log
-    )
-    end_fw = time.perf_counter()
-    cpu_fw = (end_fw - start_fw) * 1000.0
+    # print("\n================= DIJKSTRA (time-limit comparison) =================")
+    # start_fw = time.perf_counter()
+    # res_fw = EvacuationOptimization(
+    #     building_graph,
+    #     starting_groups,
+    #     exit_points,
+    #     time_limit=time_limit,
+    #     target_evacuees=None,
+    #     stop_on_target=False,
+    #     verbose=True,         # show detailed events on console
+    #     routing_mode='dijkstra',
+    #     show_steps=True       # record STEP snapshots into log
+    # )
+    # end_fw = time.perf_counter()
+    # cpu_fw = (end_fw - start_fw) * 1000.0
 
-    print_scenario_report("Time-Limit Scenario (DIJKSTRA)", res_fw, total_pop, cpu_fw)
+    # print_scenario_report("Time-Limit Scenario (DIJKSTRA)", res_fw, total_pop, cpu_fw)
 
-    append_report_to_file(
-        report_file,
-        "Time-Limit Scenario (DIJKSTRA)",
-        res_fw,
-        total_pop,
-        cpu_fw
-    )
+    # append_report_to_file(
+    #     report_file,
+    #     "Time-Limit Scenario (DIJKSTRA)",
+    #     res_fw,
+    #     total_pop,
+    #     cpu_fw
+    # )
